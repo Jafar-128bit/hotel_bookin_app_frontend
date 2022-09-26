@@ -12,6 +12,10 @@
     margin: 20px 0 100px 0;
 }
 
+.listMode {
+    margin: 20px 0 0 0;
+}
+
 .Header__list {
     display: flex;
     gap: 40px;
@@ -83,6 +87,7 @@
 .Header__reactDate {
     position: absolute;
     top: 45px;
+    z-index: 2;
 }
 
 .Header__options {
@@ -93,6 +98,7 @@
     border-radius: 5px;
     -webkit-box-shadow: 0 0 10px -5px rgba(0,0,0,0.4);
     box-shadow: 0 0 10px -5px rgba(0,0,0,0.4);
+    z-index: 2;
 }
 
 .Header__optionItem {
