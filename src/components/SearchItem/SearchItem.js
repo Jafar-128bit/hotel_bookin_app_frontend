@@ -1,7 +1,8 @@
 import './SearchItem.css';
 import searchItemPhoto_01 from '../../assets/searchItem_Photo/searchItemPhoto.webp';
+import {Link} from "react-router-dom";
 
-const SearchItem = () => {
+const SearchItem = ({data}) => {
     return (
         <div className="SearchItem">
             <img
@@ -10,14 +11,14 @@ const SearchItem = () => {
                 alt="img"
             />
             <div className="SearchItem__description">
-                <h1 className="SearchItem__title">Tower Street Apartments</h1>
-                <span className="SearchItem__distance">500m from center</span>
+                <h1 className="SearchItem__title">{data.name}</h1>
+                <span className="SearchItem__distance">{data.distance}m from center</span>
                 <span className="SearchItem__taxiOp">Free airport taxi</span>
                 <span className="SearchItem__subtitle">
                     Studio Apartment with Air Conditioning
                 </span>
                 <span className="SearchItem__features">
-                    Entire Studio - 1 bathroom - 21m 1 full bed
+                    {data.description}
                 </span>
                 <span className="SearchItem__cancelOp">Free cancellation</span>
                 <span className="SearchItem__cancelOpSubtitle">
@@ -25,14 +26,16 @@ const SearchItem = () => {
                 </span>
             </div>
             <div className="SearchItem__details">
-                <div className="SearchItem__rating">
+                {data?.rating && <div className="SearchItem__rating">
                     <span>Excellent</span>
-                    <button>8.9</button>
-                </div>
+                    <button>{data.rating}</button>
+                </div>}
                 <div className="SearchItem__detailText">
-                    <span className="SearchItem__price">$123</span>
+                    <span className="SearchItem__price">${data.cheapestPrice}</span>
                     <span className="SearchItem__TaxOp">Includes taxes and free</span>
-                    <button className="SearchItem__checkButton">See availability</button>
+                    <Link to={`/hotels/${data._id}`}>
+                        <button className="SearchItem__checkButton">See availability</button>
+                    </Link>
                 </div>
             </div>
         </div>

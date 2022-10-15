@@ -4,47 +4,33 @@ import propertiesImage_02 from '../../assets/propertiesPhotos/propertiesPhotos_0
 import propertiesImage_03 from '../../assets/propertiesPhotos/propertiesPhotos_03.jpg';
 import propertiesImage_04 from '../../assets/propertiesPhotos/propertiesPhotos_04.jpg';
 import propertiesImage_05 from '../../assets/propertiesPhotos/propertiesPhotos_05.jpg';
+import useFetch from "../../hooks/useFetch";
 
 const PropertyList = () => {
-    return (
-        <div className="PropertyList">
-            <div className="PropertyList__items">
-                <img className="PropertyList__image" src={propertiesImage_01} alt="img"/>
-                <div className="PropertyList__titles">
-                    <h1>Hotels</h1>
-                    <h2>233 hotels</h2>
-                </div>
+        const images = [
+            propertiesImage_01,
+            propertiesImage_02,
+            propertiesImage_03,
+            propertiesImage_04,
+            propertiesImage_05
+        ];
+        const {data, loading, error, reFetch} = useFetch('http://localhost:3300/api/v1/hotels/getAll/countByType');
+        return (
+            <div className="PropertyList">
+                {loading ? ("Loading please wait...") : (<>{data && images.map(((value, index, array) => {
+                    return (
+                        <div className="PropertyList__items" key={index}>
+                            <img className="PropertyList__image" src={value} alt="img"/>
+                            <div className="PropertyList__titles">
+                                <h1>{data[index]?.type}</h1>
+                                <h2>{data[index]?.count} {data[index]?.type}s</h2>
+                            </div>
+                        </div>
+                    );
+                }))}</>)}
             </div>
-            <div className="PropertyList__items">
-                <img className="PropertyList__image" src={propertiesImage_02} alt="img"/>
-                <div className="PropertyList__titles">
-                    <h1>Apartments</h1>
-                    <h2>2331 hotels</h2>
-                </div>
-            </div>
-            <div className="PropertyList__items">
-                <img className="PropertyList__image" src={propertiesImage_03} alt="img"/>
-                <div className="PropertyList__titles">
-                    <h1>Resorts</h1>
-                    <h2>2331 hotels</h2>
-                </div>
-            </div>
-            <div className="PropertyList__items">
-                <img className="PropertyList__image" src={propertiesImage_04} alt="img"/>
-                <div className="PropertyList__titles">
-                    <h1>Villas</h1>
-                    <h2>2331 hotels</h2>
-                </div>
-            </div>
-            <div className="PropertyList__items">
-                <img className="PropertyList__image" src={propertiesImage_05} alt="img"/>
-                <div className="PropertyList__titles">
-                    <h1>Cabins</h1>
-                    <h2>2331 hotels</h2>
-                </div>
-            </div>
-        </div>
-    );
-};
+        );
+    }
+;
 
 export default PropertyList;

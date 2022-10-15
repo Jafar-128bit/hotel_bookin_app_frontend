@@ -6,13 +6,26 @@ import {useState} from "react";
 import {format} from "date-fns";
 import DateRange from "react-date-range/dist/components/DateRange";
 import SearchItem from "../../components/SearchItem/SearchItem";
+import useFetch from "../../hooks/useFetch";
 
 const List = () => {
     const location = useLocation();
+    console.log(location);
     const [destination, setDestination] = useState(location.state.destination);
-    const [date, setDate] = useState(location.state.date);
+    const [dates, setDates] = useState(location.state.dates);
     const [openDate, setOpenDate] = useState(false);
     const [options, setOptions] = useState(location.state.options);
+    const [min, setMin] = useState(undefined);
+    const [max, setMax] = useState(undefined);
+    const {
+        data,
+        loading,
+        error,
+        reFetch
+    } = useFetch(`http://localhost:3300/api/v1/hotels/qS?city=${destination}&min=${min || 0}&max=${max || 999}`);
+    const handleClick = async () => {
+        await reFetch();
+    };
     return (
         <div className="List">
             <Navbar/>
@@ -23,20 +36,24 @@ const List = () => {
                         <h1 className="List__title">Search</h1>
                         <div className="List__items">
                             <label>Destination</label>
-                            <input type="text" placeholder={destination}/>
+                            <input
+                                type="text"
+                                placeholder={destination}
+                                onChange={event => setDestination(event.target.value)}
+                            />
                         </div>
                         <div className="List__items">
                             <label>Check-in Date</label>
                             <span onClick={() => setOpenDate(!openDate)}>
-                                {`${format(date[0].startDate,
+                                {`${format(dates[0].startDate,
                                     "dd/MM/yyyy")} to 
-                                    ${format(date[0].endDate,
+                                    ${format(dates[0].endDate,
                                     "dd/MM/yyyy")}`}
                             </span>
                             {openDate && (<DateRange
-                                onChange={item => setDate([item.selection])}
+                                onChange={item => setDates([item.selection])}
                                 minDate={new Date()}
-                                ranges={date}
+                                ranges={dates}
                             />)}
                         </div>
                         <div className="List__item">
@@ -48,7 +65,9 @@ const List = () => {
                                 </span>
                                     <input
                                         type="number"
-                                        className="List__optionInput"/>
+                                        className="List__optionInput"
+                                        onChange={event => setMin(event.target.value)}
+                                    />
                                 </div>
                                 <div className="List__optionItem">
                                 <span className="List__optionText">
@@ -56,7 +75,9 @@ const List = () => {
                                 </span>
                                     <input
                                         type="number"
-                                        className="List__optionInput"/>
+                                        className="List__optionInput"
+                                        onChange={event => setMax(event.target.value)}
+                                    />
                                 </div>
                                 <div className="List__optionItem">
                                 <span className="List__optionText">
@@ -93,13 +114,26 @@ const List = () => {
                                 </div>
                             </div>
                         </div>
-                        <button type="button">Search</button>
+                        <button
+                            type="button"
+                            onClick={handleClick}
+                        >Search
+                        </button>
                     </div>
                     <div className="List__result">
-                        <SearchItem/>
-                        <SearchItem/>
-                        <SearchItem/>
-                        <SearchItem/>
+                        {loading ?
+                            "Loading Please Wait..." :
+                            <>
+                                {data.map((value, index, array) => {
+                                    return (
+                                        <SearchItem
+                                            key={index}
+                                            data={value}
+                                        />
+                                    );
+                                })}
+                            </>
+                        }
                     </div>
                 </div>
             </div>

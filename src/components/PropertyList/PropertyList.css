@@ -21,6 +21,7 @@
 
 .PropertyList__titles > h1 {
     font-size: 18px;
+    text-transform: capitalize;
 }
 
 .PropertyList__titles > h2 {

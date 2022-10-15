@@ -3,67 +3,43 @@ import FeaturedPropertiesImage_01 from '../../assets/featuredProperties/featured
 import FeaturedPropertiesImage_02 from '../../assets/featuredProperties/featuredProperties_02.jpg';
 import FeaturedPropertiesImage_03 from '../../assets/featuredProperties/featuredProperties_03.jpg';
 import FeaturedPropertiesImage_04 from '../../assets/featuredProperties/featuredProperties_04.jpg';
-
+import useFetch from "../../hooks/useFetch";
 
 const FeaturedProperties = () => {
+    const images = [
+        FeaturedPropertiesImage_01,
+        FeaturedPropertiesImage_02,
+        FeaturedPropertiesImage_03,
+        FeaturedPropertiesImage_04
+    ];
+    const {
+        data,
+        loading,
+    } = useFetch('http://localhost:3300/api/v1/hotels/getAll/featuredOnly');
     return (
         <div className="FeaturedProperties">
-           <div className="FeaturedProperties__items">
-               <img
-                   src={FeaturedPropertiesImage_01}
-                   alt="img"
-                   className="FeaturedProperties__image"
-               />
-               <span className="FeaturedProperties__Name">Aparthotel Stare Miasto</span>
-               <span className="FeaturedProperties__city">Madrid</span>
-               <span className="FeaturedProperties__price">Stating from $120</span>
-               <div className="FeaturedProperties__rating">
-                   <button type="button">8.9</button>
-                   <span>Excellent</span>
-               </div>
-           </div>
-            <div className="FeaturedProperties__items">
-                <img
-                    src={FeaturedPropertiesImage_02}
-                    alt="img"
-                    className="FeaturedProperties__image"
-                />
-                <span className="FeaturedProperties__Name">Aparthotel Stare Miasto</span>
-                <span className="FeaturedProperties__city">Madrid</span>
-                <span className="FeaturedProperties__price">Stating from $120</span>
-                <div className="FeaturedProperties__rating">
-                    <button type="button">8.9</button>
-                    <span>Excellent</span>
-                </div>
-            </div>
-            <div className="FeaturedProperties__items">
-                <img
-                    src={FeaturedPropertiesImage_03}
-                    alt="img"
-                    className="FeaturedProperties__image"
-                />
-                <span className="FeaturedProperties__Name">Aparthotel Stare Miasto</span>
-                <span className="FeaturedProperties__city">Madrid</span>
-                <span className="FeaturedProperties__price">Stating from $120</span>
-                <div className="FeaturedProperties__rating">
-                    <button type="button">8.9</button>
-                    <span>Excellent</span>
-                </div>
-            </div>
-            <div className="FeaturedProperties__items">
-                <img
-                    src={FeaturedPropertiesImage_04}
-                    alt="img"
-                    className="FeaturedProperties__image"
-                />
-                <span className="FeaturedProperties__Name">Aparthotel Stare Miasto</span>
-                <span className="FeaturedProperties__city">Madrid</span>
-                <span className="FeaturedProperties__price">Stating from $120</span>
-                <div className="FeaturedProperties__rating">
-                    <button type="button">8.9</button>
-                    <span>Excellent</span>
-                </div>
-            </div>
+            {loading ?
+                "Loading wait..." :
+                <>{data && images.map((value, index, array) => {
+                    return (
+                        <div className="FeaturedProperties__items" key={index}>
+                            <img
+                                src={value}
+                                alt="img"
+                                className="FeaturedProperties__image"
+                            />
+                            <span className="FeaturedProperties__Name">{data[index]?.name}</span>
+                            <span className="FeaturedProperties__city">{data[index]?.city}</span>
+                            <span
+                                className="FeaturedProperties__price">Stating from ${data[index]?.cheapestPrice}</span>
+                            {data.rating && <div className="FeaturedProperties__rating">
+                                <button type="button">{data[index]?.rating}</button>
+                                <span>Excellent</span>
+                            </div>}
+                        </div>
+                    );
+                })}</>
+            }
         </div>
     );
 };
